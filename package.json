@@ -15,7 +15,7 @@
     "@simplewebauthn/browser": "^6.2.2",
     "axios": "^1.2.1",
     "vue": "^3.2.45",
-    "vue-router": "^4.1.6",
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
