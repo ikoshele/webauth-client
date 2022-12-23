@@ -22,14 +22,42 @@ a,
 }
 
 @media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 50px;
+}
+
+input {
+  background: none;
+  border: 1px solid hsla(160, 100%, 37%, 1);
+  height: 50px;
+  width: 290px;
+  border-radius: 4px;
+  font-size: 18px;
+  padding: 0 16px;
+  color: inherit;
+}
+
+label + label {
+  margin-top: 20px;
+}
+
+button[type="submit"] {
+  margin-top: 40px;
+  background: hsla(160, 100%, 37%, 1);
+  border: none;
+  width: 290px;
+  height: 50px;
+  text-align: center;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+section {
+  display: flex;
+  justify-content: center;
 }
