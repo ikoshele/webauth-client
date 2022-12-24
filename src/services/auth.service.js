@@ -42,15 +42,6 @@ export function isAuthenticated() {
   //return tokenPayload.exp > currentTime;
 }
 
-export function requireAuth(nextState, replace) {
-  if (!isAuthenticated()) {
-    replace({
-      pathname: "/login",
-      state: { nextPathname: nextState.location.pathname },
-    });
-  }
-}
-
 export async function login(username, password) {
   try {
     const { data } = await axiosInstance.post("/login", {
@@ -66,11 +57,12 @@ export async function login(username, password) {
   }
 }
 
-export async function signup(username, password) {
+export async function signup(username, password, name) {
   try {
     const { data } = await axiosInstance.post("/signup", {
       username,
       password,
+      name,
     });
     if (data.accessToken) {
       setAccessToken(data.accessToken);
@@ -101,8 +93,8 @@ export async function refreshTokenHandler() {
   const tokenPayload = getAccessTokenPayload();
   if (!tokenPayload) return;
   const currentTime = Date.now().valueOf() / 1000;
-  //const refreshThreshold = tokenPayload.exp - tokenPayload.iat - 0; // refresh 1 minute before expiration
-  if (currentTime > tokenPayload.exp) {
+  const refreshThreshold = tokenPayload.exp - tokenPayload.iat - 60; // refresh 1 minute before expiration
+  if (currentTime > tokenPayload.exp + refreshThreshold) {
     return await authStore.userRefreshAccessToken();
   }
   return null;

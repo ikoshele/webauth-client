@@ -1,12 +1,12 @@
 <script setup>
 import { reactive } from "vue";
-const formState = reactive({ username: "", password: "" });
+const formState = reactive({ username: "", password: "", name: "" });
 import { useAuthStore } from "@/stores/auth.store.js";
 
 async function formHandler() {
-  const { username, password } = formState;
+  const { username, password, name } = formState;
   const authStore = useAuthStore();
-  const res = await authStore.userRegister(username, password);
+  const res = await authStore.userRegister(username, password, name);
 }
 </script>
 
@@ -27,6 +27,9 @@ async function formHandler() {
             placeholder="username"
             v-model="formState.username"
           />
+        </label>
+        <label>
+          <input type="text" placeholder="name" v-model="formState.name" />
         </label>
         <label>
           <input

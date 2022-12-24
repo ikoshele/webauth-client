@@ -24,8 +24,8 @@ export const useAuthStore = defineStore({
     tokenPayload: getAccessTokenPayload(),
   }),
   actions: {
-    async userRegister(username, password) {
-      const data = await signup(username, password);
+    async userRegister(username, password, name) {
+      const data = await signup(username, password, name);
       console.log(data, "pinia");
       if (data.id) {
         updateUserData(this);
@@ -34,7 +34,7 @@ export const useAuthStore = defineStore({
       return data;
     },
     async userLogin(username, password) {
-      const { data } = await login(username, password);
+      const data = await login(username, password);
       console.log(data, "pinia");
       if (data.id) {
         updateUserData(this);
