@@ -1,13 +1,28 @@
 <script setup>
 import { reactive } from "vue";
-const formState = reactive({ username: "", password: "" });
-import { useAuthStore } from "@/stores/auth.store.js";
-import router from "@/router/index.js";
 
+const formState = reactive({
+  username: "",
+  password: "",
+  webAuthState: {
+    status: "",
+  },
+});
+import { setAccessToken } from "@/services/auth.service.js";
+import { useAuthStore } from "@/stores/auth.store.js";
+const authStore = useAuthStore();
 async function formHandler() {
   const { username, password } = formState;
-  const authStore = useAuthStore();
   const user = await authStore.userLogin(username, password);
+}
+
+import { webAuthLogin } from "@/services/webauth.service.js";
+
+async function startWebAuthLogin() {
+  const userRecord = await webAuthLogin();
+  if (userRecord.accessToken) {
+    authStore.userManualLogin(userRecord.accessToken);
+  }
 }
 </script>
 
@@ -39,6 +54,8 @@ async function formHandler() {
         </label>
         <button type="submit">Login</button>
       </form>
+      <button @click="startWebAuthLogin">Sign in with WebAuth</button>
+      <div>{{ formState.webAuthState.status }}</div>
     </div>
   </section>
 </template>

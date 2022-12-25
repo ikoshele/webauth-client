@@ -7,14 +7,9 @@ import {
   login,
   logout,
   refreshAccessToken,
+  setAccessToken,
   signup,
 } from "@/services/auth.service.js";
-
-function updateUserData(state) {
-  state.authenticated = isAuthenticated();
-  state.token = getAccessToken();
-  state.tokenPayload = getAccessTokenPayload();
-}
 
 export const useAuthStore = defineStore({
   id: "auth",
@@ -28,8 +23,7 @@ export const useAuthStore = defineStore({
       const data = await signup(username, password, name);
       console.log(data, "pinia");
       if (data.id) {
-        updateUserData(this);
-        await router.push("/");
+        this.successRedirect();
       }
       return data;
     },
@@ -37,8 +31,7 @@ export const useAuthStore = defineStore({
       const data = await login(username, password);
       console.log(data, "pinia");
       if (data.id) {
-        updateUserData(this);
-        await router.push("/");
+        this.successRedirect();
       }
       return data;
     },
@@ -52,11 +45,25 @@ export const useAuthStore = defineStore({
     async userRefreshAccessToken() {
       const newAccessToken = await refreshAccessToken();
       if (newAccessToken) {
-        updateUserData(this);
+        this.updateUserData();
         return newAccessToken;
       } else {
         this.userLogout();
       }
+    },
+    updateUserData() {
+      this.authenticated = isAuthenticated();
+      this.token = getAccessToken();
+      this.tokenPayload = getAccessTokenPayload();
+    },
+    successRedirect() {
+      this.updateUserData();
+      router.push("/");
+    },
+    userManualLogin(accessToken) {
+      setAccessToken(accessToken);
+      this.updateUserData();
+      if (this.authenticated) this.successRedirect();
     },
   },
 });
