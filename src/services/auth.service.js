@@ -4,15 +4,6 @@ import { useAuthStore } from "@/stores/auth.store.js";
 
 const ACCESS_TOKEN_KEY = "access_token";
 
-function errorHandler(e) {
-  console.log(e);
-  const { status, data } = e.response;
-  return {
-    status,
-    ...data,
-  };
-}
-
 export function getAccessToken() {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
 }
@@ -53,7 +44,7 @@ export async function login(username, password) {
     }
     return data;
   } catch (e) {
-    return errorHandler(e);
+    return e;
   }
 }
 
@@ -69,7 +60,7 @@ export async function signup(username, password, name) {
     }
     return data;
   } catch (e) {
-    return errorHandler(e);
+    return e;
   }
 }
 

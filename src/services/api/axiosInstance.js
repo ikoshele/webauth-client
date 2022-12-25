@@ -8,6 +8,14 @@ const axiosInstance = axios.create({
   withCredentials: true,
   credentials: "include",
 });
+
+function errorHandler(e) {
+  const { status, data } = e.response;
+  return {
+    status,
+    ...data,
+  };
+}
 axiosInstance.interceptors.response.use(
   function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
@@ -22,19 +30,18 @@ axiosInstance.interceptors.response.use(
     }
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    return Promise.reject(error);
+    console.warn(error, "original error");
+    const modifiedError = errorHandler(error);
+    return Promise.reject(modifiedError);
   }
 );
 
 axiosInstance.interceptors.request.use(async (config) => {
   if (config.url !== "/token-refresh") {
-    const newAccessToken = await refreshTokenHandler();
-    if (newAccessToken) {
-      const newAuthHeader = authHeader();
-      delete config.headers.Authorization;
-      config.headers = { ...config.headers, ...newAuthHeader };
-    }
+    await refreshTokenHandler();
   }
+  const authHeadersObj = authHeader();
+  config.headers = { ...config.headers, ...authHeadersObj };
   return config;
 });
 
