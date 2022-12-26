@@ -42,6 +42,8 @@ async function startWebAuthSignUp() {
             type="text"
             required
             placeholder="username"
+            name="username"
+            autocomplete="webauthn username"
             v-model="formState.username"
           />
         </label>
@@ -52,13 +54,19 @@ async function startWebAuthSignUp() {
           <input
             type="password"
             placeholder="password"
+            name="password"
+            autocomplete="webauthn password"
             v-model="formState.password"
           />
         </label>
         <button type="submit">Register</button>
       </form>
       <form action="#" @submit.prevent="startWebAuthSignUp">
-        <input type="text" v-model="formState.username" />
+        <input
+          type="text"
+          placeholder="Username"
+          v-model="formState.username"
+        />
         <button type="submit">Sign in passwordless</button>
       </form>
     </div>

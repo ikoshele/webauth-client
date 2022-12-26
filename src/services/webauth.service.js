@@ -51,11 +51,11 @@ export async function verifyAuthentication(payload) {
   }
 }
 
-export async function webAuthLogin() {
+export async function webAuthLogin(preflight) {
   const resp = await generateAuthenticationOptions();
   try {
     // Pass the options to the authenticator and wait for a response
-    const asseResp = await startAuthentication(resp);
+    const asseResp = await startAuthentication(resp, preflight);
 
     // POST the response to the endpoint that calls
     // @simplewebauthn/server -> verifyAuthenticationResponse()

@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from "vue";
+import { onMounted, reactive } from "vue";
 
 const formState = reactive({
   username: "",
@@ -8,7 +8,6 @@ const formState = reactive({
     status: "",
   },
 });
-import { setAccessToken } from "@/services/auth.service.js";
 import { useAuthStore } from "@/stores/auth.store.js";
 const authStore = useAuthStore();
 async function formHandler() {
@@ -18,8 +17,11 @@ async function formHandler() {
 
 import { webAuthLogin } from "@/services/webauth.service.js";
 
-async function startWebAuthLogin() {
-  const userRecord = await webAuthLogin();
+onMounted(async () => {
+  await startWebAuthLogin(true);
+});
+async function startWebAuthLogin(preflight) {
+  const userRecord = await webAuthLogin(preflight);
   if (userRecord.accessToken) {
     authStore.userManualLogin(userRecord.accessToken);
   }
@@ -41,6 +43,8 @@ async function startWebAuthLogin() {
             type="text"
             required
             placeholder="username"
+            name="username"
+            autocomplete="webauthn username"
             v-model="formState.username"
           />
         </label>
@@ -49,12 +53,14 @@ async function startWebAuthLogin() {
             type="password"
             required
             placeholder="password"
+            name="password"
+            autocomplete="webauthn password"
             v-model="formState.password"
           />
         </label>
         <button type="submit">Login</button>
       </form>
-      <button @click="startWebAuthLogin">Sign in with WebAuth</button>
+      <button @click="startWebAuthLogin(false)">Sign in with WebAuth</button>
       <div>{{ formState.webAuthState.status }}</div>
     </div>
   </section>
