@@ -13,7 +13,7 @@ function errorHandler(e) {
   const { status, data } = e.response;
   return {
     status,
-    ...data,
+    data,
   };
 }
 axiosInstance.interceptors.response.use(

@@ -21,7 +21,6 @@ export const useAuthStore = defineStore({
   actions: {
     async userRegister(username, password, name) {
       const data = await signup(username, password, name);
-      console.log(data, "pinia");
       if (data.id) {
         this.successRedirect();
       }
@@ -29,7 +28,6 @@ export const useAuthStore = defineStore({
     },
     async userLogin(username, password) {
       const data = await login(username, password);
-      console.log(data, "pinia");
       if (data.id) {
         this.successRedirect();
       }

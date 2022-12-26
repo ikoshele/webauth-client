@@ -5,64 +5,40 @@ import {
 } from "@simplewebauthn/browser";
 
 export async function generateRegistrationOptions(username) {
-  try {
-    const { data } = await axiosInstance.post(
-      "/generate-registration-options",
-      { username }
-    );
-    return data;
-  } catch (e) {
-    return e;
-  }
+  const { data } = await axiosInstance.post("/generate-registration-options", {
+    username,
+  });
+  return data;
 }
 
 export async function verifyDeviceRegistration(regOptions) {
-  try {
-    const { data } = await axiosInstance.post(
-      "/verify-registration",
-      regOptions
-    );
-    return data;
-  } catch (e) {
-    return e;
-  }
+  const { data } = await axiosInstance.post("/verify-registration", regOptions);
+  return data;
 }
 
 export async function generateAuthenticationOptions() {
-  try {
-    const { data } = await axiosInstance.get(
-      "/generate-authentication-options"
-    );
-    return data;
-  } catch (e) {
-    return e;
-  }
+  const { data } = await axiosInstance.get("/generate-authentication-options");
+  return data;
 }
 
 export async function verifyAuthentication(payload) {
-  try {
-    const { data } = await axiosInstance.post(
-      "/verify-authentication",
-      payload
-    );
-    return data;
-  } catch (e) {
-    return e;
-  }
+  const { data } = await axiosInstance.post("/verify-authentication", payload);
+  return data;
 }
 
 export async function webAuthLogin(preflight) {
   const resp = await generateAuthenticationOptions();
+  let asseResp;
   try {
     // Pass the options to the authenticator and wait for a response
-    const asseResp = await startAuthentication(resp, preflight);
+    asseResp = await startAuthentication(resp, preflight);
 
     // POST the response to the endpoint that calls
     // @simplewebauthn/server -> verifyAuthenticationResponse()
-    return await verifyAuthentication(asseResp);
   } catch (e) {
     return errorHandler(e);
   }
+  return await verifyAuthentication(asseResp);
 }
 
 export async function webAuthSignUp(username) {
@@ -71,28 +47,25 @@ export async function webAuthSignUp(username) {
   try {
     // Pass the options to the authenticator and wait for a response
     attResp = await startRegistration(resp);
-  } catch (error) {
-    return errorHandler();
+  } catch (e) {
+    errorHandler(e);
   }
 
   // POST the response to the endpoint that calls
   // @simplewebauthn/server -> verifyRegistrationResponse()
   const verificationJSON = await verifyDeviceRegistration(attResp);
 
-  console.log(verificationJSON);
-
   if (verificationJSON && verificationJSON.verified) {
     return verificationJSON;
   } else {
-    errorHandler("Something went wrong");
+    errorHandler({ error: { message: "Something went wrong" } });
   }
 }
 
 function errorHandler(error) {
-  if (error?.name === "InvalidStateError")
-    error = "Error: Authenticator was probably already registered by user";
-  return {
-    success: false,
-    errorMessage: error,
-  };
+  if (error?.name === "InvalidStateError") {
+    error.message =
+      "Error: Authenticator was probably already registered by user";
+  }
+  throw new Error(error);
 }

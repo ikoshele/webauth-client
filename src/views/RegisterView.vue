@@ -1,26 +1,38 @@
 <script setup>
 import { reactive } from "vue";
-
-const formState = reactive({
-  username: "",
-  password: "",
-  name: "",
-  webAuthState: "",
-});
 import { useAuthStore } from "@/stores/auth.store.js";
 import { webAuthSignUp } from "@/services/webauth.service.js";
 
-async function formHandler() {
+const authState = reactive({
+  basicAuth: {
+    username: "",
+    password: "",
+    name: "",
+  },
+  webAuth: {
+    username: "",
+  },
+});
+
+async function basicAuthHandler() {
   const authStore = useAuthStore();
-  const { username, password, name } = formState;
-  const res = await authStore.userRegister(username, password, name);
+  const { username, password, name } = authState.basicAuth;
+  try {
+    await authStore.userRegister(username, password, name);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 async function startWebAuthSignUp() {
   const authStore = useAuthStore();
-  const userRecord = await webAuthSignUp(formState.username);
-  if (userRecord.accessToken) {
-    authStore.userManualLogin(userRecord.accessToken);
+  try {
+    const userRecord = await webAuthSignUp(authState.webAuth.username);
+    if (userRecord.accessToken) {
+      authStore.userManualLogin(userRecord.accessToken);
+    }
+  } catch (e) {
+    console.log(e);
   }
 }
 </script>
@@ -30,25 +42,27 @@ async function startWebAuthSignUp() {
     <div class="container">
       <h2>Register page</h2>
       <div>
-        <span>username: {{ formState.username }}</span>
+        <span>username: {{ authState.basicAuth.username }}</span>
         <br />
-        <span>password: {{ formState.password }}</span>
+        <span>password: {{ authState.basicAuth.password }}</span>
         <br />
-        <span>status: {{ formState.webAuthState }}</span>
       </div>
-      <form action="#" @submit.prevent="formHandler">
+      <form action="#" @submit.prevent="basicAuthHandler">
         <label>
           <input
             type="text"
-            required
             placeholder="username"
             name="username"
             autocomplete="webauthn username"
-            v-model="formState.username"
+            v-model="authState.basicAuth.username"
           />
         </label>
         <label>
-          <input type="text" placeholder="name" v-model="formState.name" />
+          <input
+            type="text"
+            placeholder="name"
+            v-model="authState.basicAuth.name"
+          />
         </label>
         <label>
           <input
@@ -56,7 +70,7 @@ async function startWebAuthSignUp() {
             placeholder="password"
             name="password"
             autocomplete="webauthn password"
-            v-model="formState.password"
+            v-model="authState.basicAuth.password"
           />
         </label>
         <button type="submit">Register</button>
@@ -65,7 +79,8 @@ async function startWebAuthSignUp() {
         <input
           type="text"
           placeholder="Username"
-          v-model="formState.username"
+          name="username"
+          v-model="authState.webAuth.username"
         />
         <button type="submit">Sign in passwordless</button>
       </form>

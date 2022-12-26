@@ -34,34 +34,26 @@ export function isAuthenticated() {
 }
 
 export async function login(username, password) {
-  try {
-    const { data } = await axiosInstance.post("/login", {
-      username,
-      password,
-    });
-    if (data.accessToken) {
-      setAccessToken(data.accessToken);
-    }
-    return data;
-  } catch (e) {
-    return e;
+  const { data } = await axiosInstance.post("/login", {
+    username,
+    password,
+  });
+  if (data.accessToken) {
+    setAccessToken(data.accessToken);
   }
+  return data;
 }
 
 export async function signup(username, password, name) {
-  try {
-    const { data } = await axiosInstance.post("/signup", {
-      username,
-      password,
-      name,
-    });
-    if (data.accessToken) {
-      setAccessToken(data.accessToken);
-    }
-    return data;
-  } catch (e) {
-    return e;
+  const { data } = await axiosInstance.post("/signup", {
+    username,
+    password,
+    name,
+  });
+  if (data.accessToken) {
+    setAccessToken(data.accessToken);
   }
+  return data;
 }
 
 export function logout() {

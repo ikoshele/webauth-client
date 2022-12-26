@@ -1,29 +1,33 @@
 <script setup>
 import { onMounted, reactive } from "vue";
+import { webAuthLogin } from "@/services/webauth.service.js";
+import { useAuthStore } from "@/stores/auth.store.js";
 
 const formState = reactive({
   username: "",
   password: "",
-  webAuthState: {
-    status: "",
-  },
 });
-import { useAuthStore } from "@/stores/auth.store.js";
 const authStore = useAuthStore();
-async function formHandler() {
+async function basicAuthHandler() {
   const { username, password } = formState;
-  const user = await authStore.userLogin(username, password);
+  try {
+    await authStore.userLogin(username, password);
+  } catch (e) {
+    console.log(e);
+  }
 }
-
-import { webAuthLogin } from "@/services/webauth.service.js";
 
 onMounted(async () => {
   await startWebAuthLogin(true);
 });
 async function startWebAuthLogin(preflight) {
-  const userRecord = await webAuthLogin(preflight);
-  if (userRecord.accessToken) {
-    authStore.userManualLogin(userRecord.accessToken);
+  try {
+    const userRecord = await webAuthLogin(preflight);
+    if (userRecord.accessToken) {
+      authStore.userManualLogin(userRecord.accessToken);
+    }
+  } catch (e) {
+    console.log(e);
   }
 }
 </script>
@@ -37,11 +41,10 @@ async function startWebAuthLogin(preflight) {
         <br />
         <span>password: {{ formState.password }}</span>
       </div>
-      <form action="#" @submit.prevent="formHandler">
+      <form action="#" @submit.prevent="basicAuthHandler">
         <label>
           <input
             type="text"
-            required
             placeholder="username"
             name="username"
             autocomplete="webauthn username"
@@ -51,7 +54,6 @@ async function startWebAuthLogin(preflight) {
         <label>
           <input
             type="password"
-            required
             placeholder="password"
             name="password"
             autocomplete="webauthn password"
@@ -61,7 +63,6 @@ async function startWebAuthLogin(preflight) {
         <button type="submit">Login</button>
       </form>
       <button @click="startWebAuthLogin(false)">Sign in with WebAuth</button>
-      <div>{{ formState.webAuthState.status }}</div>
     </div>
   </section>
 </template>

@@ -1,7 +1,6 @@
 <script setup>
 import { getProfileData } from "@/services/api/profileFetcher.js";
 import { reactive } from "vue";
-
 import { webAuthSignUp } from "@/services/webauth.service.js";
 
 async function startWebAuthSignUp() {
