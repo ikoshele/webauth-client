@@ -1,12 +1,27 @@
 <script setup>
 import { reactive } from "vue";
-const formState = reactive({ username: "", password: "", name: "" });
+
+const formState = reactive({
+  username: "",
+  password: "",
+  name: "",
+  webAuthState: "",
+});
 import { useAuthStore } from "@/stores/auth.store.js";
+import { webAuthSignUp } from "@/services/webauth.service.js";
 
 async function formHandler() {
-  const { username, password, name } = formState;
   const authStore = useAuthStore();
+  const { username, password, name } = formState;
   const res = await authStore.userRegister(username, password, name);
+}
+
+async function startWebAuthSignUp() {
+  const authStore = useAuthStore();
+  const userRecord = await webAuthSignUp(formState.username);
+  if (userRecord.accessToken) {
+    authStore.userManualLogin(userRecord.accessToken);
+  }
 }
 </script>
 
@@ -18,6 +33,8 @@ async function formHandler() {
         <span>username: {{ formState.username }}</span>
         <br />
         <span>password: {{ formState.password }}</span>
+        <br />
+        <span>status: {{ formState.webAuthState }}</span>
       </div>
       <form action="#" @submit.prevent="formHandler">
         <label>
@@ -34,12 +51,15 @@ async function formHandler() {
         <label>
           <input
             type="password"
-            required
             placeholder="password"
             v-model="formState.password"
           />
         </label>
         <button type="submit">Register</button>
+      </form>
+      <form action="#" @submit.prevent="startWebAuthSignUp">
+        <input type="text" v-model="formState.username" />
+        <button type="submit">Sign in passwordless</button>
       </form>
     </div>
   </section>
