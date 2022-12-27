@@ -4,9 +4,13 @@ import { refreshTokenHandler } from "@/services/auth.service.js";
 import authHeader from "@/services/api/authHeader.js";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: import.meta.env.VITE_BACKEND_ORIGIN,
   withCredentials: true,
   credentials: "include",
+  //TODO: Remove Ngrok header
+  headers: {
+    "ngrok-skip-browser-warning": "69420",
+  },
 });
 
 function errorHandler(e) {
