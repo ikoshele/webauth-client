@@ -40,8 +40,7 @@ async function startWebAuthLogin(preflight = false) {
   }
 }
 onMounted(async () => {
-  const res = await startWebAuthLogin(true);
-  console.log(res);
+  await startWebAuthLogin(true);
 });
 </script>
 
@@ -65,7 +64,7 @@ onMounted(async () => {
       <router-link to="/register">Don’t have an account? Sign Up</router-link>
     </div>
     <divider-text text="Or"></divider-text>
-    <vue-button @click="startWebAuthLogin" button-type="button">
+    <vue-button @click="startWebAuthLogin()" button-type="button">
       <icon-finger></icon-finger>
       Passkey
     </vue-button>

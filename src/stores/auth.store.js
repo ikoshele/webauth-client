@@ -56,7 +56,7 @@ export const useAuthStore = defineStore({
     },
     successRedirect() {
       this.updateUserData();
-      router.push("/");
+      router.push("/profile");
     },
     userManualLogin(accessToken) {
       setAccessToken(accessToken);

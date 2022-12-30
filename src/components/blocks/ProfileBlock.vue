@@ -18,6 +18,15 @@ onMounted(async () => {
     if (userRecord) {
       userData.username = userRecord.username;
       userData.name = userRecord.name;
+      let localDevices = localStorage.getItem("credId");
+      if (localDevices) {
+        localDevices = JSON.parse(localDevices);
+        localDevices.forEach((localDevice) => {
+          if (userRecord.decodedDevices.includes(localDevice)) {
+            userData.isDeviceRegistered = true;
+          }
+        });
+      }
     }
   } catch (e) {
     console.log(e);
@@ -53,13 +62,7 @@ async function startWebAuthSignUp() {
       </div>
     </div>
     <hr class="hr-gradient block-divider" />
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget
-      elementum ex. Pellentesque pulvinar vehicula felis a sodales. Donec in
-      ultricies eros. Cras maximus accumsan velit, in aliquet augue luctus in.
-      Vivamus ut ipsum consectetur, posuere odio ut, tempor velit. Morbi et
-      lacus sit amet ante ultricies euismod non id leo.
-    </p>
+    <p>Register your device and login to the account paswordless</p>
     <VueButton @click="startWebAuthSignUp">
       <span v-if="!userData.isDeviceRegistered">
         Register Device <IconArrowRight></IconArrowRight>

@@ -55,7 +55,13 @@ export async function webAuthSignUp(username) {
   // POST the response to the endpoint that calls
   // @simplewebauthn/server -> verifyRegistrationResponse()
   const verificationJSON = await verifyDeviceRegistration(attResp);
-  localStorage.setItem("credId", attResp.id);
+
+  let oldCreds = localStorage.getItem("credId");
+  oldCreds = oldCreds ? JSON.parse(oldCreds) : [];
+  localStorage.setItem(
+    "credId",
+    JSON.stringify([verificationJSON.credentialID, ...oldCreds])
+  );
 
   if (verificationJSON && verificationJSON.verified) {
     return verificationJSON;
