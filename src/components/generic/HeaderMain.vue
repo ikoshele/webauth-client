@@ -22,13 +22,8 @@ console.log(authStore.authenticated, "isAuthed");
           <li>
             <RouterLink class="underline" to="/profile">Profile</RouterLink>
           </li>
-          <li>
-            <button
-              v-if="authStore.authenticated"
-              @click="authStore.userLogout"
-              type="button">
-              Logout
-            </button>
+          <li v-if="authStore.authenticated">
+            <button @click="authStore.userLogout" type="button">Logout</button>
           </li>
         </ul>
       </nav>
