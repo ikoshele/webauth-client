@@ -1,7 +1,7 @@
 <script setup>
 import VueButton from "@/components/includes/VueButton.vue";
 import IconArrowRight from "@/components/icons/iconArrowRight.vue";
-import { getProfileData } from "@/services/api/profileFetcher.js";
+import { getProfileData } from "@/api/profile.api.js";
 import { onMounted, reactive } from "vue";
 import { webAuthSignUp } from "@/services/webauth.service.js";
 import IconCheck from "@/components/icons/iconCheck.vue";

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useAuthStore } from "@/stores/auth.store.js";
 import { refreshTokenHandler } from "@/services/auth.service.js";
-import authHeader from "@/services/api/authHeader.js";
+import authHeader from "@/api/helpers/authHeader.js";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_ORIGIN,
