@@ -56,7 +56,8 @@ button
 a:hover:before,
 a:focus:before,
 button:hover:before,
-button:focus:before
+button:focus:before,
+.router-link-active:before
   content: ''
   position: absolute
   left: 0
