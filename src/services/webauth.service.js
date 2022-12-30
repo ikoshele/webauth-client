@@ -1,30 +1,13 @@
-import { axiosInstance } from "@/services/api/axiosInstance.js";
 import {
   startAuthentication,
   startRegistration,
 } from "@simplewebauthn/browser";
-
-export async function generateRegistrationOptions(username) {
-  const { data } = await axiosInstance.post("/generate-registration-options", {
-    username,
-  });
-  return data;
-}
-
-export async function verifyDeviceRegistration(regOptions) {
-  const { data } = await axiosInstance.post("/verify-registration", regOptions);
-  return data;
-}
-
-export async function generateAuthenticationOptions() {
-  const { data } = await axiosInstance.get("/generate-authentication-options");
-  return data;
-}
-
-export async function verifyAuthentication(payload) {
-  const { data } = await axiosInstance.post("/verify-authentication", payload);
-  return data;
-}
+import {
+  generateRegistrationOptions,
+  generateAuthenticationOptions,
+  verifyAuthentication,
+  verifyDeviceRegistration,
+} from "@/api/webauth.api.js";
 
 export async function webAuthLogin(preflight) {
   const resp = await generateAuthenticationOptions();

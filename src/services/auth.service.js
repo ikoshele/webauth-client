@@ -1,6 +1,10 @@
 import jwtDecode from "jwt-decode";
-import { axiosInstance } from "@/services/api/axiosInstance.js";
 import { useAuthStore } from "@/stores/auth.store.js";
+import {
+  loginRequest,
+  signupRequest,
+  tokenRefreshRequest,
+} from "@/api/auth.api.js";
 
 const ACCESS_TOKEN_KEY = "access_token";
 
@@ -34,10 +38,7 @@ export function isAuthenticated() {
 }
 
 export async function login(username, password) {
-  const { data } = await axiosInstance.post("/login", {
-    username,
-    password,
-  });
+  const data = await loginRequest(username, password);
   if (data.accessToken) {
     setAccessToken(data.accessToken);
   }
@@ -45,11 +46,7 @@ export async function login(username, password) {
 }
 
 export async function signup(username, password, name) {
-  const { data } = await axiosInstance.post("/signup", {
-    username,
-    password,
-    name,
-  });
+  const data = await signupRequest(username, password, name);
   if (data.accessToken) {
     setAccessToken(data.accessToken);
   }
@@ -62,7 +59,7 @@ export function logout() {
 
 export async function refreshAccessToken() {
   try {
-    const { data: accessToken } = await axiosInstance.post("/token-refresh");
+    const accessToken = await tokenRefreshRequest();
     setAccessToken(accessToken);
     return accessToken;
   } catch (e) {
