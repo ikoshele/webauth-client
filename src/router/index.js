@@ -35,8 +35,8 @@ const router = createRouter({
       component: () => import("../views/RegisterView.vue"),
     },
     {
-      path: "/private",
-      name: "private",
+      path: "/profile",
+      name: "profile",
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -44,15 +44,15 @@ const router = createRouter({
     },
   ],
 });
-router.beforeEach(async (to) => {
-  // redirect to login page if not logged in and trying to access a restricted page
-  const privatePages = ["/private"];
-  const authRequired = privatePages.includes(to.path);
-
-  const auth = useAuthStore();
-  if (authRequired && !auth.authenticated) {
-    return false;
-  }
-});
+// router.beforeEach(async (to) => {
+//   // redirect to login page if not logged in and trying to access a restricted page
+//   const privatePages = ["/private"];
+//   const authRequired = privatePages.includes(to.path);
+//
+//   const auth = useAuthStore();
+//   if (authRequired && !auth.authenticated) {
+//     return false;
+//   }
+// });
 
 export default router;

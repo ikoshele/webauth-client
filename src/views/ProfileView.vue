@@ -1,32 +1,14 @@
 <script setup>
-import { getProfileData } from "@/services/api/profileFetcher.js";
-import { reactive } from "vue";
-import { webAuthSignUp } from "@/services/webauth.service.js";
-
-async function startWebAuthSignUp() {
-  state.webAuthState.status = await webAuthSignUp();
-}
-
-const state = reactive({
-  userData: {
-    id: "",
-    username: "",
-    name: "",
-  },
-  webAuthState: {
-    status: "",
-  },
-});
-
-getProfileData().then((res) => {
-  if (res && res.userRecord) {
-    state.userData = { ...res.userRecord };
-  }
-});
+import ProfileBlock from "@/components/blocks/ProfileBlock.vue";
 </script>
 
 <template>
   <section>
+    <div class="container-main">
+      <profile-block class="profile-panel"></profile-block>
+    </div>
+  </section>
+  <!--  <section>
     <div class="container">
       <h1>Profile page</h1>
       <h3>
@@ -45,5 +27,11 @@ getProfileData().then((res) => {
       <div>WebAuthState: {{ state.webAuthState.status }}</div>
       <button @click="startWebAuthSignUp">Register device</button>
     </div>
-  </section>
+  </section>-->
 </template>
+
+<style scoped lang="sass">
+.profile-panel
+  max-width: 536px
+  margin: 0 auto
+</style>

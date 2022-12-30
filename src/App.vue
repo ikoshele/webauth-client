@@ -1,96 +1,31 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
-import { useAuthStore } from "@/stores/auth.store.js";
-
-const authStore = useAuthStore();
-
-console.log(authStore.authenticated, "isAuthed");
+import { RouterView } from "vue-router";
+import HeaderMain from "@/components/generic/HeaderMain.vue";
+import GradientBackground from "@/components/includes/GradientBackground.vue";
 </script>
 
 <template>
-  <header>
-    <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink v-if="!authStore.authenticated" to="/login">Login</RouterLink>
-      <RouterLink v-if="!authStore.authenticated" to="/register"
-        >Register</RouterLink
-      >
-      <RouterLink to="/private">Private</RouterLink>
-      <button
-        v-if="authStore.authenticated"
-        @click="authStore.userLogout"
-        type="button"
-      >
-        Logout
-      </button>
-    </nav>
-  </header>
+  <div class="background">
+    <gradient-background></gradient-background>
+  </div>
+  <HeaderMain></HeaderMain>
 
   <main>
     <RouterView />
   </main>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
+<style scoped lang="sass">
+.background
+  position: absolute
+  left: 0
+  top: 0
+  right: 0
+  bottom: 0
+  overflow: hidden
+  z-index: -1
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
+main
+  margin-top: clamp(18px, get-vw(32px), 32px)
+  margin-bottom: clamp(30px, get-vw(60px), 60px)
 </style>

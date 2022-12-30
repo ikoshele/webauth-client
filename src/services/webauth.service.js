@@ -38,6 +38,7 @@ export async function webAuthLogin(preflight) {
   } catch (e) {
     return errorHandler(e);
   }
+  console.log(asseResp);
   return await verifyAuthentication(asseResp);
 }
 
@@ -54,6 +55,7 @@ export async function webAuthSignUp(username) {
   // POST the response to the endpoint that calls
   // @simplewebauthn/server -> verifyRegistrationResponse()
   const verificationJSON = await verifyDeviceRegistration(attResp);
+  localStorage.setItem("credId", attResp.id);
 
   if (verificationJSON && verificationJSON.verified) {
     return verificationJSON;
